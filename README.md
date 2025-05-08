@@ -22,6 +22,7 @@ A lightweight starter project for implementing a **simple, secure JWT authentica
 - Modular and extensible codebase
 
 ## 📁 Structure
+`
 auth-jwt
 | |-- src/
 | | |-- app/
@@ -53,7 +54,7 @@ auth-jwt
 |-- drizzle.config.ts 
 |-- compose.yml
 |-- .env
-
+`
 ## 🔧 Setup
 
 1. **Clone and install dependencies**
@@ -66,30 +67,23 @@ bun install
 
 2. **Define environment variables**
  
-- Define the `DATABASE_URL`
-Copy this url: `postgres://postgres:password@localhost:5432/postgres`
-- Define `PEPPER` & `SESSION_SECRET`
-
-If on Mac or Linux, run this command twice and copy the values. 
+- `DATABASE_URL=postgres://postgres:password@localhost:5432/postgres`
+- `PEPPER` & `SESSION_SECRET` will be equal to the outputs of
 ```bash
 openssl rand -base64 32
 ```
 
-- Define `SESSION_NAME`
-Choose the name for your token
-- Define `NODE_ENV`
-Set it to `development`
+- `SESSION_NAME=auth_token` (can be any name)
+- `NODE_ENV=development`
 
 3. **Build container**
-This assumes you have docker desktop.
 - `docker compose up`
-If you would prefer to have the container run in the background:
-- `docker compose up -d`
+- `docker compose up -d` (If you would prefer to have the container run in the background)
 
 4. **Push schema to db**
 
-- run `bun run db:push`
-- (optionally) run `bun run db:studio`
+- `bun run db:push`
+-  `bun run db:studio` (optionally)
 
 ## 📝 License
 MIT
