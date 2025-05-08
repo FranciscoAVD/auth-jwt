@@ -22,7 +22,7 @@ A lightweight starter project for implementing a **simple, secure JWT authentica
 - Modular and extensible codebase
 
 ## 📁 Structure
-`
+```
 auth-jwt
 | |-- src/
 | | |-- app/
@@ -54,7 +54,7 @@ auth-jwt
 |-- drizzle.config.ts 
 |-- compose.yml
 |-- .env
-`
+```
 ## 🔧 Setup
 
 1. **Clone and install dependencies**
