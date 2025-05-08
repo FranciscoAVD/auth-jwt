@@ -1,36 +1,95 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🔐 Next.js JWT Auth Starter
 
-## Getting Started
+A lightweight starter project for implementing a **simple, secure JWT authentication strategy** using modern tools and best practices.
 
-First, run the development server:
+## 🚀 Stack
+
+- **Next.js** – App router & Actions
+- **React** -  useActionState
+- **JOSE** – JSON Web Token library for signing/validating JWTs
+- **Drizzle ORM** – Type-safe PostgreSQL database layer
+- **Zod** - Validation library
+- **PostgreSQL** – User data storage
+- **Argon2** – Secure password hashing
+- **Docker** – Local containerized development environment
+
+## 📦 Features
+
+- JWT-based login and session strategy using HTTP-only cookies
+- Secure password storage with Argon2
+- Minimal and clear authentication flow
+- Preconfigured Docker setup for Postgres
+- Modular and extensible codebase
+
+## 📁 Structure
+auth-jwt
+| |-- src/
+| | |-- app/
+| | | |-- login/
+| | |   |-- page.tsx # Login route
+| | | |-- register/
+| | |   |-- page.tsx # Register route
+| | |-- page.tsx # Root route
+| |
+| | |-- db/
+| | |-- index.ts 
+| | |-- schema.ts 
+| | |-- types.ts # Table types
+| | |-- use-cases/
+| | | |-- add-user.ts # Inserting user into db
+| | | |-- get-user.ts # Querying user from db
+| |
+| | |-- lib/
+| | |-- utils.ts 
+| | |-- actions.ts # Auth actions
+| | |-- jwt-strategy.ts # Encryption & decryption
+| |
+| | |-- components/
+| | | |-- ui/ # Minimal UI components mostly from Shadcn
+| | |-- user-button.tsx # Provides logout 
+| |
+| |-- env.ts
+| |-- middleware.ts
+|-- drizzle.config.ts 
+|-- compose.yml
+|-- .env
+
+## 🔧 Setup
+
+1. **Clone and install dependencies**
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/FranciscoAVD/auth-jwt
+cd auth-jwt
+bun install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. **Define environment variables**
+ 
+- Define the `DATABASE_URL`
+Copy this url: `postgres://postgres:password@localhost:5432/postgres`
+- Define `PEPPER` & `SESSION_SECRET`
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+If on Mac or Linux, run this command twice and copy the values. 
+```bash
+openssl rand -base64 32
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- Define `SESSION_NAME`
+Choose the name for your token
+- Define `NODE_ENV`
+Set it to `development`
 
-## Learn More
+3. **Build container**
+This assumes you have docker desktop.
+- `docker compose up`
+If you would prefer to have the container run in the background:
+- `docker compose up -d`
 
-To learn more about Next.js, take a look at the following resources:
+4. **Push schema to db**
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- run `bun run db:push`
+- (optionally) run `bun run db:studio`
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 📝 License
+MIT
