@@ -9,6 +9,7 @@ import { loginAction } from "@/lib/actions";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { LoadingSpinner } from "@/components/ui/loading-spinner";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -65,7 +66,7 @@ export default function LoginPage() {
             className="w-full"
             disabled={isLoading}
           >
-            Login
+            {isLoading ? <LoadingSpinner /> : "Login"}
           </Button>
         </form>
       </main>

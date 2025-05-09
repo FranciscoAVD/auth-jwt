@@ -9,6 +9,7 @@ import { registerAction } from "@/lib/actions";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { LoadingSpinner } from "@/components/ui/loading-spinner";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -84,7 +85,7 @@ export default function RegisterPage() {
             className="w-full"
             disabled={isLoading}
           >
-            Register
+            {isLoading ? <LoadingSpinner /> : "Register"}
           </Button>
         </form>
       </main>
