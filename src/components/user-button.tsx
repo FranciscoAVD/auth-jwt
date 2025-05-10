@@ -4,7 +4,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
-import { User, LogOut } from "lucide-react";
+import { LogOut } from "lucide-react";
 import { deleteSession, getCurrentUser } from "@/lib/jwt-strategy";
 import { redirect } from "next/navigation";
 
@@ -24,9 +24,9 @@ export async function UserButton({
         <Button
           variant="secondary"
           size="icon"
-          className={`rounded-full ${className}`}
+          className={`uppercase rounded-full ${className}`}
         >
-          <User aria-hidden />
+          <span>{user.name[0]}</span>
           <span className="sr-only">User menu</span>
         </Button>
       </PopoverTrigger>

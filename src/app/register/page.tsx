@@ -1,10 +1,8 @@
 "use client";
 
-import { useActionState, useEffect } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-
-import { registerAction } from "@/lib/actions";
 
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -13,13 +11,35 @@ import { LoadingSpinner } from "@/components/ui/loading-spinner";
 
 export default function RegisterPage() {
   const router = useRouter();
-  const [previous, formAction, isLoading] = useActionState(registerAction, {
-    success: false,
-  });
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [errors, setErrors] = useState<any | undefined>();
 
-  useEffect(() => {
-    if (previous.success) router.push("/protected");
-  }, [previous]);
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setIsLoading(true);
+
+    const form = new FormData(e.target as HTMLFormElement);
+    const name = form.get("name") as string;
+    const email = form.get("email") as string;
+    const password = form.get("password") as string;
+
+    const response = await fetch("api/auth/register", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ name, email, password }),
+    });
+
+    if (!response.ok) {
+      const data = await response.json();
+      setErrors(data.errors);
+      setIsLoading(false);
+    } else {
+      setIsLoading(false);
+      router.push("/protected");
+    }
+  }
   return (
     <>
       <header className="fixed top-0 inset-x-0 h-16 flex items-center px-4">
@@ -28,7 +48,7 @@ export default function RegisterPage() {
       <main className="h-screen grid place-content-center gap-6">
         <h1 className="text-5xl font-semibold">Register Page</h1>
         <form
-          action={formAction}
+          onSubmit={handleSubmit}
           className="grid gap-4 border border-white/30 rounded-xl p-4"
         >
           <div className="space-y-1">
@@ -40,8 +60,8 @@ export default function RegisterPage() {
               placeholder="John"
               required
             />
-            {previous.errors?.name && (
-              <p className="text-red-500 text-sm">{previous.errors.name}</p>
+            {errors?.name && (
+              <p className="text-red-500 text-sm">{errors.name}</p>
             )}
           </div>
           <div className="space-y-1">
@@ -53,8 +73,8 @@ export default function RegisterPage() {
               placeholder="example@example.com"
               required
             />
-            {previous.errors?.email && (
-              <p className="text-red-500 text-sm">{previous.errors.email}</p>
+            {errors?.email && (
+              <p className="text-red-500 text-sm">{errors.email}</p>
             )}
           </div>
           <div className="space-y-1">
@@ -66,8 +86,8 @@ export default function RegisterPage() {
               minLength={8}
               required
             />
-            {previous.errors?.password && (
-              <p className="text-red-500 text-sm">{previous.errors.password}</p>
+            {errors?.password && (
+              <p className="text-red-500 text-sm">{errors.password}</p>
             )}
           </div>
           <p className="text-sm text-white/70">
@@ -76,9 +96,6 @@ export default function RegisterPage() {
               Login
             </Link>
           </p>
-          {previous.message && (
-            <p className="text-red-500 text-sm">{previous.message}</p>
-          )}
           <Button
             type="submit"
             variant="secondary"
