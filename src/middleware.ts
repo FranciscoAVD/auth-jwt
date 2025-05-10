@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getSession } from "@/lib/jwt-strategy";
+import { decrypt } from "@/lib/jwt-strategy";
+import { env } from "./env";
 
 export async function middleware(req: NextRequest) {
   const path = req.nextUrl.pathname;
-  const session = await getSession();
+  const session = await decrypt(req.cookies.get(env.SESSION_NAME)?.value);
 
   if (!session && path.startsWith("/protected"))
     return NextResponse.redirect(new URL("/login", req.nextUrl));
