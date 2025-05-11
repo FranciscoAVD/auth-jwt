@@ -26,6 +26,12 @@ A lightweight starter project for implementing a **simple, secure JWT authentica
 auth-jwt
 | |-- src/
 | | |-- app/
+| | |-- api/
+| | | |-- auth
+| | | | |-- login
+| | | |   |-- route.ts 
+| | | | |-- register
+| | | |   |-- route.ts 
 | | | |-- login/
 | | |   |-- page.tsx # Login route
 | | | |-- register/
@@ -42,7 +48,6 @@ auth-jwt
 | |
 | | |-- lib/
 | | |-- utils.ts 
-| | |-- actions.ts # Auth actions
 | | |-- jwt-strategy.ts # Encryption & decryption
 | |
 | | |-- components/
