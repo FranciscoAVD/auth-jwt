@@ -2,15 +2,16 @@ import { cookies } from "next/headers";
 import { jwtVerify, SignJWT, type JWTPayload } from "jose";
 import { cache } from "react";
 import { env } from "@/env";
-import { User } from "@/db/types";
 import { getOneWeekFromNow } from "@/lib/utils";
 import { z } from "zod";
 
-type SessionData = {
-  id: User["id"];
-  email: User["email"];
-  name: User["name"];
-};
+const sessionDataSchema = z.object({
+  id: z.number().min(1),
+  name: z.string().min(1),
+  email: z.string().email(),
+});
+
+type SessionData = z.infer<typeof sessionDataSchema>;
 
 interface Payload extends JWTPayload {
   data: SessionData;
@@ -61,11 +62,6 @@ export async function getSession(): Promise<Payload | null> {
   return await decrypt(cookie);
 }
 
-const sessionDataSchema = z.object({
-  id: z.number().min(1),
-  name: z.string().min(1),
-  email: z.string().email(),
-});
 export const getCurrentUser = cache(async (): Promise<SessionData | null> => {
   const session = await getSession();
   const { success, data } = sessionDataSchema.safeParse(session?.data);
