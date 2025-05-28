@@ -14,14 +14,14 @@ const sessionDataSchema = z.object({
 type SessionData = z.infer<typeof sessionDataSchema>;
 
 interface Payload extends JWTPayload {
-  data: SessionData;
+  sessionData: SessionData;
   expiresAt: Date;
 }
 
 const encodedKey = new TextEncoder().encode(env.SESSION_SECRET);
 const alg = "HS256" as const;
 
-async function encrypt(payload: Payload): Promise<string> {
+export async function encrypt(payload: Payload): Promise<string> {
   return new SignJWT(payload)
     .setProtectedHeader({ alg: alg })
     .setIssuedAt()
@@ -44,18 +44,6 @@ export async function decrypt(
   }
 }
 
-export async function createSession(data: SessionData): Promise<void> {
-  const expiresAt = getOneWeekFromNow();
-  const jwt = await encrypt({ data, expiresAt });
-
-  const cookieStore = await cookies();
-  cookieStore.set(env.SESSION_NAME, jwt, {
-    httpOnly: true,
-    secure: env.NODE_ENV === "production",
-    expires: expiresAt,
-  });
-}
-
 export async function getSession(): Promise<Payload | null> {
   const cookieStore = await cookies();
   const cookie = cookieStore.get(env.SESSION_NAME)?.value;
@@ -64,7 +52,7 @@ export async function getSession(): Promise<Payload | null> {
 
 export const getCurrentUser = cache(async (): Promise<SessionData | null> => {
   const session = await getSession();
-  const { success, data } = sessionDataSchema.safeParse(session?.data);
+  const { success, data } = sessionDataSchema.safeParse(session?.sessionData);
   return success ? data : null;
 });
 

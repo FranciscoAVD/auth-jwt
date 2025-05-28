@@ -1,11 +1,8 @@
 "use client";
 
-import { useActionState, useEffect } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-
-import { registerAction } from "@/lib/actions";
-
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -13,13 +10,37 @@ import { LoadingSpinner } from "@/components/ui/loading-spinner";
 
 export default function RegisterPage() {
   const router = useRouter();
-  const [previous, formAction, isLoading] = useActionState(registerAction, {
-    success: false,
-  });
+  const [errors, setErrors] = useState<any | undefined>();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const form = new FormData(e.target as HTMLFormElement);
+    const name = form.get("name") as string;
+    const email = form.get("email") as string;
+    const password = form.get("password") as string;
 
-  useEffect(() => {
-    if (previous.success) router.push("/protected");
-  }, [previous]);
+    const res = await fetch("api/auth/register", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name,
+        email,
+        password,
+      }),
+    });
+
+    const body = await res.json();
+    if (!res.ok) {
+      setErrors(body.errors);
+      setIsLoading(false);
+    } else {
+      setErrors(undefined);
+      setIsLoading(false);
+      router.push("/protected");
+    }
+  }
   return (
     <>
       <header className="fixed top-0 inset-x-0 h-16 flex items-center px-4">
@@ -28,8 +49,8 @@ export default function RegisterPage() {
       <main className="h-screen grid place-content-center gap-6">
         <h1 className="text-5xl font-semibold">Register Page</h1>
         <form
-          action={formAction}
-          className="grid gap-4 border border-white/30 rounded-xl p-4"
+          onSubmit={handleSubmit}
+          className="grid gap-4 border rounded-xl p-4"
         >
           <div className="space-y-1">
             <Label htmlFor="form-login--name">Name</Label>
@@ -40,8 +61,8 @@ export default function RegisterPage() {
               placeholder="John"
               required
             />
-            {previous.errors?.name && (
-              <p className="text-red-500 text-sm">{previous.errors.name}</p>
+            {errors?.name && (
+              <p className="text-red-500 text-sm">{errors.name}</p>
             )}
           </div>
           <div className="space-y-1">
@@ -53,8 +74,8 @@ export default function RegisterPage() {
               placeholder="example@example.com"
               required
             />
-            {previous.errors?.email && (
-              <p className="text-red-500 text-sm">{previous.errors.email}</p>
+            {errors?.email && (
+              <p className="text-red-500 text-sm">{errors.email}</p>
             )}
           </div>
           <div className="space-y-1">
@@ -66,19 +87,16 @@ export default function RegisterPage() {
               minLength={8}
               required
             />
-            {previous.errors?.password && (
-              <p className="text-red-500 text-sm">{previous.errors.password}</p>
+            {errors?.password && (
+              <p className="text-red-500 text-sm">{errors.password}</p>
             )}
           </div>
-          <p className="text-sm text-white/70">
+          <p className="text-sm">
             Already have an account?{" "}
             <Link href="/login" className="text-blue-500">
               Login
             </Link>
           </p>
-          {previous.message && (
-            <p className="text-red-500 text-sm">{previous.message}</p>
-          )}
           <Button
             type="submit"
             variant="secondary"
