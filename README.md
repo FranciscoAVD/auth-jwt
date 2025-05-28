@@ -26,34 +26,54 @@ A lightweight starter project for implementing a **simple, secure JWT authentica
 auth-jwt
 | |-- src/
 | | |-- app/
+| | | |-- api/
+| | | | |-- auth/
+| | | | | |-- register/
+| | | | | | |-- route.ts # Auth register endpoint
+| | | | | |-- login/
+| | | | | | |-- route.ts # Auth login endpoint
+| | | 
 | | | |-- login/
-| | |   |-- page.tsx # Login route
+| | | | |-- page.tsx # Login route
+| | | 
 | | | |-- register/
-| | |   |-- page.tsx # Register route
-| | |-- page.tsx # Root route
+| | | | |-- page.tsx # Register route
+| | | 
+| | | |-- protected/
+| | | | |-- page.tsx # Protected resource
+| | | 
+| | | |-- page.tsx # Root route
 | |
 | | |-- db/
-| | |-- index.ts 
-| | |-- schema.ts 
-| | |-- types.ts # Table types
-| | |-- use-cases/
-| | | |-- add-user.ts # Inserting user into db
-| | | |-- get-user.ts # Querying user from db
+| | | |-- index.ts 
+| | | |-- schema.ts 
+| | | |-- types.ts # Table types
 | |
+| | |-- features/
+| | | |-- auth/
+| | | | |-- lib/
+| | | | | |-- jwt-strategy.ts
+| | | | | |-- schemas.ts
+| | | 
+| | | |-- users/
+| | | | |-- components/
+| | | | | |-- user-button.tsx # Provides logout
+| | | | |-- use-cases/
+| | | | | |-- get-user.ts
+| | | | | |-- add-user.ts
+| | |
 | | |-- lib/
-| | |-- utils.ts 
-| | |-- actions.ts # Auth actions
-| | |-- jwt-strategy.ts # Encryption & decryption
+| | | |-- utils.ts 
 | |
 | | |-- components/
 | | | |-- ui/ # Minimal UI components mostly from Shadcn
-| | |-- user-button.tsx # Provides logout 
 | |
 | |-- env.ts
 | |-- middleware.ts
-|-- drizzle.config.ts 
-|-- compose.yml
-|-- .env
+|
+| |-- drizzle.config.ts 
+| |-- compose.yml
+| |-- .env
 ```
 ## 🔧 Setup
 
